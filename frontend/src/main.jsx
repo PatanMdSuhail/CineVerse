@@ -8,7 +8,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 
 // Auth
-
+import AdminRoute from "./pages/Admin/AdminRoute.jsx";
+import GenreList from "./pages/Admin/GenreList.jsx";
 // Restricted
 import Login from "./pages/Auth/Login.jsx";
 import Register from "./pages/Auth/Register.jsx";
@@ -24,6 +25,10 @@ const router = createBrowserRouter(
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<Profile />} />
+      </Route>
+
+      <Route path="" element={<AdminRoute />}>
+        <Route path="/admin/movies/genre" element={<GenreList />} />
       </Route>
     </Route>
   )

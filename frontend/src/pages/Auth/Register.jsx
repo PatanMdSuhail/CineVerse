@@ -48,11 +48,16 @@ const Register = () => {
   };
 
   return (
-    <div className="pl-[10rem] flex flex-wrap">
-      <div className="mr-[4rem] mt-[5rem]">
-        <h1 className="text-2xl font-semibold mb-4">Register</h1>
+    <div className="flex justify-center items-center w-full h-screen">
+      <div className="w-[40%] mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-teal-400 text-center mb-2">
+          Register
+        </h1>
 
-        <form onSubmit={submitHandler} className="container w-[40rem]">
+        <form
+          onSubmit={submitHandler}
+          className="w-[100%] mx-auto bg-gray-800 p-8 rounded-lg shadow-lg"
+        >
           <div className="my-[2rem]">
             <label htmlFor="name" className="block text-sm font-medium">
               Name
@@ -60,7 +65,7 @@ const Register = () => {
             <input
               type="text"
               id="name"
-              className="mt-1 p-2 border rounded w-full"
+              className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"
               placeholder="Enter Name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -76,7 +81,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
-              className="mt-1 p-2 border rounded w-full"
+              className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"
               placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -92,7 +97,7 @@ const Register = () => {
             <input
               type="password"
               id="password"
-              className="mt-1 p-2 border rounded w-full"
+              className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"
               placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -108,7 +113,7 @@ const Register = () => {
             <input
               type="password"
               id="confirmPassword"
-              className="mt-1 p-2 border rounded w-full"
+              className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -147,3 +152,40 @@ const Register = () => {
   );
 };
 export default Register;
+
+{
+  /* <div className="flex justify-center items-center w-full h-screen bg-black">
+  <div className="w-[40%] mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+    <h2 className="text-3xl font-bold text-teal-400 text-center mb-6">Register</h2>
+    <form onSubmit={submitHandler}>
+      <div className="mb-4">
+        <label className="block text-white mb-2">Name</label>
+        <input type="text" placeholder="Enter name" className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"/>
+      </div>
+      <div className="mb-4">
+        <label className="block text-white mb-2">Email Address</label>
+        <input type="email" placeholder="Enter email" className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"/>
+      </div>
+      <div className="mb-4">
+        <label className="block text-white mb-2">Password</label>
+        <input type="password" placeholder="Enter password" className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"/>
+      </div>
+      <div className="mb-4">
+        <label className="block text-white mb-2">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" className="p-3 bg-gray-700 text-white rounded-md border border-gray-600 w-full focus:ring-2 focus:ring-teal-500 focus:outline-none"/>
+      </div>
+      <button className="w-full mt-4 bg-teal-500 text-white py-3 rounded-md hover:bg-teal-600 transition duration-200">
+        Register
+      </button>
+    </form>
+    <div className="mt-4 text-center">
+      <p className="text-gray-600">
+        Already have an account?{" "}
+        <Link to={redirect ? `/login?redirect=${redirect}` : "/login"} className="text-teal-500 hover:underline">
+          Login
+        </Link>
+      </p>
+    </div>
+  </div>
+</div> */
+}
