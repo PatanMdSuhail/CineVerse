@@ -10,4 +10,7 @@ export default defineConfig({
       "/uploads/": "http://localhost:3000",
     },
   },
+  build: {
+    outDir: "dist", // Ensure Vercel can find the output
+  },
 });
