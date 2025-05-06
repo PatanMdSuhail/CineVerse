@@ -4,40 +4,24 @@ import asyncHandler from "../middlewares/asyncHandler.js";
 import createToken from "../utils/createToken.js";
 
 const createUser = asyncHandler(async (req, res) => {
-  // Hardcoded user data for testing purposes
   const { username, email, password } = req.body;
 
-  console.log("req.body user data:", `${username}-${email}-${password}`);
-
-  // Check if the email already exists in the database
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    console.log("User already exists");
-    return res.status(400).json({ message: "User already exists" });
+  if (!username || !email || !password) {
+    throw new Error("Please fill all the fields");
   }
 
+  const userExists = await User.findOne({ email });
+  if (userExists) res.status(400).send("User already exists");
+
+  // Hash the user password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  const newUser = new User({ username, email, password: hashedPassword });
+
   try {
-    // Hash the hardcoded user password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create new user object
-    const newUser = new User({
-      username: username,
-      email: email,
-      password: hashedPassword,
-    });
-
-    console.log("New User Object before saving:", newUser);
-
-    // Save the hardcoded user to the database
     await newUser.save();
-
-    console.log("User saved successfully!");
-
-    // Creating a token for the user
     createToken(res, newUser._id);
-    // Respond with the saved user's details
+
     res.status(201).json({
       _id: newUser._id,
       username: newUser.username,
@@ -45,8 +29,8 @@ const createUser = asyncHandler(async (req, res) => {
       isAdmin: newUser.isAdmin,
     });
   } catch (error) {
-    console.error("Error saving user:", error);
-    res.status(500).json({ message: error.message || "Failed to save user" });
+    res.status(400);
+    throw new Error("Invalid user data");
   }
 });
 
@@ -63,6 +47,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     if (isPasswordValid) {
       createToken(res, existingUser._id);
+
       res.status(201).json({
         _id: existingUser._id,
         username: existingUser.username,
@@ -73,25 +58,25 @@ const loginUser = asyncHandler(async (req, res) => {
       res.status(401).json({ message: "Invalid Password" });
     }
   } else {
-    res.status(401).json({ message: "User Not Found" });
+    res.status(401).json({ message: "User not found" });
   }
 });
 
-const logOutCurrentUser = asyncHandler(async (req, res) => {
+const logoutCurrentUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
   });
-  res.status(200).json({ message: "Logged Out Succesfully" });
+
+  res.status(200).json({ message: "Logged out successfully" });
 });
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
-
   res.json(users);
 });
 
-const getCurrentLoggedInProfile = asyncHandler(async (req, res) => {
+const getCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -101,23 +86,24 @@ const getCurrentLoggedInProfile = asyncHandler(async (req, res) => {
       email: user.email,
     });
   } else {
-    res.status(400);
-    throw new Error("User Not Found");
+    res.status(404);
+    throw new Error("User not found.");
   }
 });
 
-const updateCurrentLoggedInProfile = asyncHandler(async (req, res) => {
+const updateCurrentUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    (user.username = req.body.username || user.username),
-      (user.email = req.body.email || user.email);
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
 
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
-      const hashPassword = await bcrypt.hash(req.body.password, salt);
-      const password = hashPassword;
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      user.password = hashedPassword;
     }
+
     const updatedUser = await user.save();
 
     res.json({
@@ -128,15 +114,15 @@ const updateCurrentLoggedInProfile = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(404);
-    throw new Error("User Not Found");
+    throw new Error("User not found");
   }
 });
 
 export {
   createUser,
   loginUser,
-  logOutCurrentUser,
+  logoutCurrentUser,
   getAllUsers,
-  getCurrentLoggedInProfile,
-  updateCurrentLoggedInProfile,
+  getCurrentUserProfile,
+  updateCurrentUserProfile,
 };
